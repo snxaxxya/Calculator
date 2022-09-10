@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  double _counter = 0;
+  double _counter = 0.00;
   final myController = TextEditingController();
   final List<String> entries = [];
   //var logger = Logger();
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       double x = double.parse(myController.text);
       String result = "$_counter / $x = ";
       _counter/=x;
-      result = result + "$_counter";
+      result = result + (_counter==double.infinity ? "Error kaa" :"$_counter");
       entries.add(result);
       log('result: $result');
       log('List result: $entries');
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                _counter == 0 ? 'Result : 0.00' : 'Result : $_counter',
+                _counter == double.infinity ? 'Result : Error Kaa' : 'Result : $_counter',
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(
@@ -121,7 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ListView.builder(
                     itemCount: entries.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Text(entries[index]);
+                      var reversedList = new List.from(entries.reversed);
+                      return Text(reversedList[index]);
                     }),
               ),
               SizedBox(
