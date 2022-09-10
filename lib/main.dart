@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -32,7 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
   double _counter = 0.00;
   final myController = TextEditingController();
   final List<String> entries = [];
-  //var logger = Logger();
 
   void _add() {
     setState(() {
@@ -72,11 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
       double x = double.parse(myController.text);
       String result = "$_counter / $x = ";
       _counter/=x;
-      result = result + (_counter==double.infinity ? "Error kaa" :"$_counter");
+      result = result + (_counter==double.infinity || _counter == double.negativeInfinity || _counter.isNaN
+          ? "Error"
+          :"$_counter");
       entries.add(result);
       log('result: $result');
       log('List result: $entries');
-
     });
   }
 
@@ -100,7 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                _counter == double.infinity ? 'Result : Error Kaa' : 'Result : $_counter',
+                _counter == double.infinity || _counter == double.negativeInfinity || _counter.isNaN
+                    ? 'Result : Error'
+                    : 'Result : $_counter',
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(
@@ -168,4 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+
 }
