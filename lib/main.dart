@@ -34,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _counter = 0.00;
   final myController = TextEditingController();
   final List<String> entries = [];
+  final _formKey = GlobalKey<FormState>();
 
   void _add() {
     setState(() {
@@ -98,77 +99,106 @@ class _MyHomePageState extends State<MyHomePage> {
       body:Container(
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                _counter == double.infinity || _counter == double.negativeInfinity || _counter.isNaN
-                    ? 'Result : Error'
-                    : 'Result : $_counter',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                style: TextStyle(fontSize: 20),
-                controller: myController,
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder()
+        child:Form(
+          key: _formKey,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  _counter == double.infinity || _counter == double.negativeInfinity || _counter.isNaN
+                      ? 'Result : Error'
+                      : 'Result : $_counter',
+                  style: TextStyle(fontSize: 20),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: entries.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var reversedList = new List.from(entries.reversed);
-                      return Text(reversedList[index]);
-                    }),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ButtonBar(
-                alignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: _add,
-                    color: Colors.blue,
-                    child: Text('+', style: TextStyle(color: Colors.white),),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  style: TextStyle(fontSize: 20),
+                  controller: myController,
+                  textAlign: TextAlign.right,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder()
                   ),
-                  RaisedButton(
-                    onPressed: _substract,
-                    color: Colors.blue,
-                    child: Text('-', style: TextStyle(color: Colors.white),),
-                  ),
-                  RaisedButton(
-                    onPressed: _multiply,
-                    color: Colors.blue,
-                    child: Text('x', style: TextStyle(color: Colors.white),),
-                  ),
-                  RaisedButton(
-                    onPressed: _divided,
-                    color: Colors.blue,
-                    child: Text('/', style: TextStyle(color: Colors.white),),
-                  ),
-                  RaisedButton(
-                    onPressed: (){
-                      this.setState(() {
-                        myController.clear();
-                        _counter = 0;
-                      });
-                    },
-                    color: Colors.redAccent,
-                    child: Text('AC', style: TextStyle(color: Colors.white),),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)  return "please input number";
+                    else if (double.tryParse(value) == null)  return "please input number";
+                    else return null;
+                   },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: entries.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var reversedList = new List.from(entries.reversed);
+                        return Text(reversedList[index]);
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: (){
+                        if (_formKey.currentState!.validate())
+                        {
+                          _add();
+                        }
+                        },
+                      color: Colors.blue,
+                      child: Text('+', style: TextStyle(color: Colors.white),),
+                    ),
+                    RaisedButton(
+                      onPressed: (){
+                      if (_formKey.currentState!.validate())
+                      {
+                        _substract();
+                      }
+                      },
+                      color: Colors.blue,
+                      child: Text('-', style: TextStyle(color: Colors.white),),
+                    ),
+                    RaisedButton(
+                      onPressed:  (){
+                      if (_formKey.currentState!.validate())
+                      {
+                        _multiply();
+                      }
+                      },
+                      color: Colors.blue,
+                      child: Text('x', style: TextStyle(color: Colors.white),),
+                    ),
+                    RaisedButton(
+                      onPressed: (){
+                      if (_formKey.currentState!.validate())
+                      {
+                        _divided();
+                      }
+                      },
+                      color: Colors.blue,
+                      child: Text('/', style: TextStyle(color: Colors.white),),
+                    ),
+                    RaisedButton(
+                      onPressed: (){
+                        this.setState(() {
+                          myController.clear();
+                          _counter = 0;
+                          entries.clear();
+                        });
+                      },
+                      color: Colors.redAccent,
+                      child: Text('AC', style: TextStyle(color: Colors.white),),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+        ),
       ),
     );
   }
