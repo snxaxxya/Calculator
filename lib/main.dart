@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
 
 void main() {
   runApp(MyApp());
@@ -37,25 +38,45 @@ class _MyHomePageState extends State<MyHomePage> {
   void _add() {
     setState(() {
       double x = double.parse(myController.text);
+      String result = "$_counter + $x = ";
       _counter+=x;
+      result = result + "$_counter";
+      entries.add(result);
+      log('result: $result');
+      log('List result: $entries');
     });
   }
   void _substract() {
     setState(() {
       double x = double.parse(myController.text);
+      String result = "$_counter - $x = ";
       _counter-=x;
+      result = result + "$_counter";
+      entries.add(result);
+      log('result: $result');
+      log('List result: $entries');
     });
   }
   void _multiply() {
     setState(() {
       double x = double.parse(myController.text);
+      String result = "$_counter * $x = ";
       _counter*=x;
+      result = result + "$_counter";
+      entries.add(result);
+      log('result: $result');
+      log('List result: $entries');
     });
   }
   void _divided() {
     setState(() {
       double x = double.parse(myController.text);
+      String result = "$_counter / $x = ";
       _counter/=x;
+      result = result + "$_counter";
+      entries.add(result);
+      log('result: $result');
+      log('List result: $entries');
     });
   }
 
