@@ -32,8 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _counter = 0;
   final myController = TextEditingController();
   final List<String> entries = [];
-
-
+  //var logger = Logger();
 
   void _add() {
     setState(() {
@@ -77,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
       entries.add(result);
       log('result: $result');
       log('List result: $entries');
+
     });
   }
 
@@ -89,7 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -115,7 +114,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   border: OutlineInputBorder()
                 ),
               ),
-
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: entries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Text(entries[index]);
+                    }),
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -142,12 +150,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.blue,
                     child: Text('/', style: TextStyle(color: Colors.white),),
                   ),
+                  RaisedButton(
+                    onPressed: (){
+                      this.setState(() {
+                        myController.clear();
+                        _counter = 0;
+                      });
+                    },
+                    color: Colors.redAccent,
+                    child: Text('AC', style: TextStyle(color: Colors.white),),
+                  ),
                 ],
               ),
             ],
           ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
