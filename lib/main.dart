@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_app/calculator/calculator_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,61 +34,72 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   double _counter = 0.00;
-  final myController = TextEditingController();
-  final List<String> entries = [];
+  final inputController = TextEditingController();
+  final List<String> results = [];
   final _formKey = GlobalKey<FormState>();
 
   void _add() {
-    setState(() {
-      double x = double.parse(myController.text);
-      String result = "$_counter + $x = ";
-      _counter+=x;
-      result = result + "$_counter";
-      entries.add(result);
-      log('result: $result');
-      log('List result: $entries');
-    });
+    // setState(() {
+    //   double x = double.parse(myController.text);
+    //   String result = "$_counter + $x = ";
+    //   _counter+=x;
+    //   result = result + "$_counter";
+    //   entries.add(result);
+    //   log('result: $result');
+    //   log('List result: $entries');
+    // });
+    BlocProvider.of<CalculatorBloc>(context).add(AddEvent(num.parse(inputController.text)));
   }
   void _substract() {
-    setState(() {
-      double x = double.parse(myController.text);
-      String result = "$_counter - $x = ";
-      _counter-=x;
-      result = result + "$_counter";
-      entries.add(result);
-      log('result: $result');
-      log('List result: $entries');
-    });
+    //setState(() {
+    //   double x = double.parse(myController.text);
+    //   String result = "$_counter - $x = ";
+    //   _counter-=x;
+    //   result = result + "$_counter";
+    //   entries.add(result);
+    //   log('result: $result');
+    //   log('List result: $entries');
+    // });
+      BlocProvider.of<CalculatorBloc>(context).add(SubstractEvent(num.parse(inputController.text)));
   }
   void _multiply() {
-    setState(() {
-      double x = double.parse(myController.text);
-      String result = "$_counter * $x = ";
-      _counter*=x;
-      result = result + "$_counter";
-      entries.add(result);
-      log('result: $result');
-      log('List result: $entries');
-    });
+    // setState(() {
+    //   double x = double.parse(myController.text);
+    //   String result = "$_counter * $x = ";
+    //   _counter*=x;
+    //   result = result + "$_counter";
+    //   entries.add(result);
+    //   log('result: $result');
+    //   log('List result: $entries');
+    // });
+    BlocProvider.of<CalculatorBloc>(context).add(MultiplyEvent(num.parse(inputController.text)));
   }
   void _divided() {
+    // setState(() {
+    //   double x = double.parse(myController.text);
+    //   String result = "$_counter / $x = ";
+    //   _counter/=x;
+    //   result = result + (_counter==double.infinity || _counter == double.negativeInfinity || _counter.isNaN
+    //       ? "Error"
+    //       :"$_counter");
+    //   entries.add(result);
+    //   log('result: $result');
+    //   log('List result: $entries');
+    // });
+    BlocProvider.of<CalculatorBloc>(context).add(DevidedEvent(num.parse(inputController.text)));
+  }
+
+  void _clearAll(){
     setState(() {
-      double x = double.parse(myController.text);
-      String result = "$_counter / $x = ";
-      _counter/=x;
-      result = result + (_counter==double.infinity || _counter == double.negativeInfinity || _counter.isNaN
-          ? "Error"
-          :"$_counter");
-      entries.add(result);
-      log('result: $result');
-      log('List result: $entries');
+      inputController.clear();
+      _counter = 0;
+      results.clear();
     });
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myController.dispose();
+    inputController.dispose();
     super.dispose();
   }
 
@@ -104,18 +117,22 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  _counter == double.infinity || _counter == double.negativeInfinity || _counter.isNaN
-                      ? 'Result : Error'
-                      : 'Result : $_counter',
-                  style: TextStyle(fontSize: 20),
+                BlocBuilder<CalculatorBloc, CalculatorState>(
+                  builder: (context, state){
+                    return Text(
+                      state.result == double.infinity || state.result == double.negativeInfinity || state.result.isNaN
+                          ? 'Result : Error'
+                          : 'Result : ${state.result}',
+                      style: TextStyle(fontSize: 20),
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 TextFormField(
                   style: TextStyle(fontSize: 20),
-                  controller: myController,
+                  controller: inputController,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
                     border: OutlineInputBorder()
@@ -130,13 +147,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 20,
                 ),
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: entries.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        var reversedList = new List.from(entries.reversed);
-                        return Text(reversedList[index]);
-                      }),
+                    child: BlocBuilder<CalculatorBloc,CalculatorState>(
+                      builder: (context , state){
+                        return ListView.builder(
+                            itemCount: state.listHistory.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var reversedList = new List.from(state.listHistory.reversed);
+                              return Text(reversedList[index]);
+                            });
+                      },
+                    ),
                 ),
+                // Expanded(
+                //   child: ListView.builder(
+                //       itemCount: results.length,
+                //       itemBuilder: (BuildContext context, int index) {
+                //         var reversedList = new List.from(results.reversed);
+                //         return Text(reversedList[index]);
+                //       }),
+                // ),
                 SizedBox(
                   height: 20,
                 ),
@@ -185,11 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     RaisedButton(
                       onPressed: (){
-                        this.setState(() {
-                          myController.clear();
-                          _counter = 0;
-                          entries.clear();
-                        });
+                        _clearAll();
                       },
                       color: Colors.redAccent,
                       child: Text('AC', style: TextStyle(color: Colors.white),),
