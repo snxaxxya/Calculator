@@ -22,3 +22,8 @@ class DevidedEvent extends CalculatorEvent{
   final num input;
   DevidedEvent(this.input);
 }
+
+class ClearEvent extends CalculatorEvent{
+  final num input;
+  ClearEvent(this.input);
+}

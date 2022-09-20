@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:developer';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_app/calculator/calculator_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Calculator'),
+      home: BlocProvider<CalculatorBloc>(
+        create: (context) => CalculatorBloc(),
+        child: MyHomePage(title: 'Calculator'),
+      )
     );
   }
 }
@@ -39,62 +41,20 @@ class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
 
   void _add() {
-    // setState(() {
-    //   double x = double.parse(myController.text);
-    //   String result = "$_counter + $x = ";
-    //   _counter+=x;
-    //   result = result + "$_counter";
-    //   entries.add(result);
-    //   log('result: $result');
-    //   log('List result: $entries');
-    // });
     BlocProvider.of<CalculatorBloc>(context).add(AddEvent(num.parse(inputController.text)));
   }
   void _substract() {
-    //setState(() {
-    //   double x = double.parse(myController.text);
-    //   String result = "$_counter - $x = ";
-    //   _counter-=x;
-    //   result = result + "$_counter";
-    //   entries.add(result);
-    //   log('result: $result');
-    //   log('List result: $entries');
-    // });
       BlocProvider.of<CalculatorBloc>(context).add(SubstractEvent(num.parse(inputController.text)));
   }
   void _multiply() {
-    // setState(() {
-    //   double x = double.parse(myController.text);
-    //   String result = "$_counter * $x = ";
-    //   _counter*=x;
-    //   result = result + "$_counter";
-    //   entries.add(result);
-    //   log('result: $result');
-    //   log('List result: $entries');
-    // });
     BlocProvider.of<CalculatorBloc>(context).add(MultiplyEvent(num.parse(inputController.text)));
   }
   void _divided() {
-    // setState(() {
-    //   double x = double.parse(myController.text);
-    //   String result = "$_counter / $x = ";
-    //   _counter/=x;
-    //   result = result + (_counter==double.infinity || _counter == double.negativeInfinity || _counter.isNaN
-    //       ? "Error"
-    //       :"$_counter");
-    //   entries.add(result);
-    //   log('result: $result');
-    //   log('List result: $entries');
-    // });
     BlocProvider.of<CalculatorBloc>(context).add(DevidedEvent(num.parse(inputController.text)));
   }
-
   void _clearAll(){
-    setState(() {
-      inputController.clear();
-      _counter = 0;
-      results.clear();
-    });
+    BlocProvider.of<CalculatorBloc>(context).add(ClearEvent(num.parse(inputController.text)));
+    inputController.clear();
   }
 
   @override

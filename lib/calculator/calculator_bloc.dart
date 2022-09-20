@@ -8,25 +8,30 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
 
   @override
   // TODO: implement initialState
-  CalculatorState get initialState => InitialCalculatorState(0,[]);
+  CalculatorState get initialState => CalculatorState(0,[]);
 
   @override
   Stream<CalculatorState> mapEventToState(CalculatorEvent event) async* {
     // TODO: Add your event logic
+    num result = 0;
     if(event is AddEvent){
-      num result = state.result + event.input;
+      result = state.result + event.input;
       state.listHistory.insert(0, '${state.result} + ${event.input} = $result');
     }else if(event is SubstractEvent){
-      num result = state.result - event.input;
+      result = state.result - event.input;
       state.listHistory.insert(0, '${state.result} - ${event.input} = $result');
     }else if(event is MultiplyEvent){
-      num result = state.result * event.input;
+      result = state.result * event.input;
       state.listHistory.insert(0, '${state.result} x ${event.input} = $result');
     }else if(event is DevidedEvent){
-      num result = state.result / event.input;
+      result = state.result / event.input;
       result == double.infinity || result == double.negativeInfinity || result.isNaN
           ? state.listHistory.add('error')
           : state.listHistory.add('${state.result} / ${event.input} = $result');
+    }else if(event is ClearEvent) {
+      result = 0;
+      state.listHistory.clear();
     }
+    yield CalculatorState(result, state.listHistory);
   }
 }
