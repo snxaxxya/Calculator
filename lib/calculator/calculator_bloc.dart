@@ -26,8 +26,8 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     }else if(event is DevidedEvent){
       result = state.result / event.input;
       result == double.infinity || result == double.negativeInfinity || result.isNaN
-          ? state.listHistory.add('error')
-          : state.listHistory.add('${state.result} / ${event.input} = $result');
+          ? state.listHistory.insert(0,'error')
+          : state.listHistory.insert(0,'${state.result} / ${event.input} = $result');
     }else if(event is ClearEvent) {
       result = 0;
       state.listHistory.clear();

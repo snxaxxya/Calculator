@@ -35,7 +35,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  double _counter = 0.00;
   final inputController = TextEditingController();
   final List<String> results = [];
   final _formKey = GlobalKey<FormState>();
@@ -112,20 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         return ListView.builder(
                             itemCount: state.listHistory.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var reversedList = new List.from(state.listHistory.reversed);
-                              return Text(reversedList[index]);
+                              return Text(state.listHistory[index]);
                             });
                       },
                     ),
                 ),
-                // Expanded(
-                //   child: ListView.builder(
-                //       itemCount: results.length,
-                //       itemBuilder: (BuildContext context, int index) {
-                //         var reversedList = new List.from(results.reversed);
-                //         return Text(reversedList[index]);
-                //       }),
-                // ),
                 SizedBox(
                   height: 20,
                 ),
